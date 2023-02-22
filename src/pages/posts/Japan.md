@@ -13,7 +13,7 @@ theme: 'dark'
 featured: true
 ---
 
-![拍摄于日本金泽兼六园的霞池(Kasumigaike Pond)|wide](https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/Kenrokuen.png)
+![拍摄于日本金泽兼六园的霞池(Kasumigaike Pond)|wide](https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/kenrokuen-compressed.jpg)
 
 
 
