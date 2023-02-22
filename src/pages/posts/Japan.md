@@ -5,8 +5,8 @@ pubDate: 2023-02-22
 description: '从名古屋一路北上到金泽，19年过年日本游记'
 author: 'Barry'
 cover:
-  url: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/Kenrokuen.png'
-  square: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/Kenrokuen.png'
+  url: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/kenrokuen-compressed.jpg'
+  square: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/kenrokuen-compressed.jpg'
   alt: 'cover'
 tags: ["旅游", "日本"]
 theme: 'dark'
