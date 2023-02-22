@@ -13,7 +13,7 @@ theme: 'dark'
 featured: true
 ---
 
-![拍摄于日本金泽兼六园的霞池(Kasumigaike Pond)|wide](https://github.com/BarryAlanPan/pics/raw/main/uPic/Kenrokuen.png)
+![拍摄于日本金泽兼六园的霞池(Kasumigaike Pond)|wide](https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/Kenrokuen.png)
 
 
 
@@ -21,5 +21,4 @@ featured: true
 
 
 
-![2月3日11点38分，取完行李后来到了“国际到达”大门|inline](https://cdn.jsdelivr.net/gh/BarryAlanPan/pics@main/uPic/arrive-airport.png)
-
+![2月3日11点38分，取完行李后来到了“国际到达”大门|inline](https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/arrive-airport.png)
