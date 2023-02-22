@@ -5,9 +5,9 @@ pubDate: 2035-07-01
 description: '19年折腾黑苹果装机的一些记录'
 author: 'Barry'
 cover:
-	url: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/2020-02-08-130708.jpg'
-	square: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/2020-02-08-130708.jpg'
-	alt: 'cover'
+  url: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/2020-02-08-130708.jpg'
+  square: 'https://barrypan-blog.oss-cn-shanghai.aliyuncs.com/PicStorage/2020-02-08-130708.jpg'
+  alt: 'cover'
 tags: ["黑苹果", "装机"]
 theme: 'dark'
 featured: true
