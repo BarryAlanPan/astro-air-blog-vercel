@@ -1,7 +1,7 @@
 ---
 layout: '../../layouts/MarkdownPost.astro'
 title: '神秘之旅，探寻日本'
-pubDate: 2019-07-30
+pubDate: 2023-02-22
 description: '从名古屋一路北上到金泽，19年过年日本游记'
 author: 'Barry'
 cover:
