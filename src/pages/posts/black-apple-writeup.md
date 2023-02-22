@@ -1,7 +1,7 @@
 ---
 layout: '../../layouts/MarkdownPost.astro'
 title: '黑苹果装机WriteUp'
-pubDate: 2035-07-01
+pubDate: 2019-07-30
 description: '19年折腾黑苹果装机的一些记录'
 author: 'Barry'
 cover:
