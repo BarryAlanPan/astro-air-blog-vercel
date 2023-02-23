@@ -1,57 +1,66 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import * as echarts from 'echarts';
 ---
 
 <BaseLayout primaryTitle="关于">
   <section class="archive">
     <div class="section-content section-tag">
       <div class="archive-tag">
-        <h2 class="tag-header">关于我</h2>
+        <h2 class="tag-header">About Me</h2>
         <div class="tag-post-list">
           <ul>
-            <li>爱看老高</li>
-            <li>爱折腾</li>
-            <li>爱音乐</li>
+            <li>A Student</li>
+            <li>A Full Stack Web Developer</li>
+            <li>A Passionate Learner</li>
           </ul>
         </div>
+      </div>
+      <div class="archive-tag">
+        <div id="chart" style="height: 600px;" />
       </div>
 
-      <div class="archive-tag">
-        <h2 class="tag-header">关注我</h2>
-        <div class="tag-post-list">
-          <ul>
-            <li>
-              <a href="https://twitter.com/austinit" target="_blank"> Twitter</a>
-            </li>
-            <li>
-              <a href="https://github.com/austin2035" target="_blank">Github</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      {/*<div class="archive-tag">*/}
+      {/*  <h2 class="tag-header">关注我</h2>*/}
+      {/*  <div class="tag-post-list">*/}
+      {/*    <ul>*/}
+      {/*      <li>*/}
+      {/*        <a href="https://twitter.com/" target="_blank"> Twitter</a>*/}
+      {/*      </li>*/}
+      {/*      <li>*/}
+      {/*        <a href="https://github.com/" target="_blank">Github</a>*/}
+      {/*      </li>*/}
+      {/*    </ul>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
-      <div class="archive-tag">
-        <h2 class="tag-header">随想</h2>
-        <div class="tag-post-list">
-          <ul>
-            <li>我常常将人看做机器，他输出了什么，常常取决于他输入了什么。</li>
-            <li>屏蔽垃圾输入，寻求优质信息源， 才能输出优质信息。</li>
-            <li>看到这，你已经被我的观念输入一遍了。</li>
-          </ul>
-        </div>
-      </div>
+      {/*<div class="archive-tag">*/}
+      {/*  <h2 class="tag-header">随想</h2>*/}
+      {/*  <div class="tag-post-list">*/}
+      {/*    <ul>*/}
+      {/*      <li>我常常将人看做机器，他输出了什么，常常取决于他输入了什么。</li>*/}
+      {/*      <li>屏蔽垃圾输入，寻求优质信息源， 才能输出优质信息。</li>*/}
+      {/*      <li>看到这，你已经被我的观念输入一遍了。</li>*/}
+      {/*    </ul>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
-      <div class="archive-tag">
-        <h2 class="tag-header">一些作品</h2>
-        <div class="tag-post-list">
-          <ul>
-            <li>
-              有点多，我下次整理一下。
-            </li>
-          </ul>
-        </div>
-      </div>
+      {/*<div class="archive-tag">*/}
+      {/*  <h2 class="tag-header">一些作品</h2>*/}
+      {/*  <div class="tag-post-list">*/}
+      {/*    <ul>*/}
+      {/*      <li>*/}
+      {/*        有点多，我下次整理一下。*/}
+      {/*      </li>*/}
+      {/*    </ul>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
     </div>
   </section>
+  <script is:inline>
+    var script = document.createElement("script");
+      script.src = "/static/js/flightPath.js";
+      document.head.appendChild(script);
+  </script>
 </BaseLayout>
