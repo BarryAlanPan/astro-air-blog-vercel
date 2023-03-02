@@ -104,6 +104,7 @@ function initChart() {
         root.setThemes([
             am5themes_Animated.new(root)
         ]);
+        root._logo.dispose();
 
         // Create the map chart
         // https://www.amcharts.com/docs/v5/charts/map-chart/
