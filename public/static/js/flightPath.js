@@ -11,6 +11,7 @@
 //
 // })
 loadCore()
+// Promise.all([loadCore(), loadMap(), loadWorld(), loadContinent(), loadAnimate()]).then(initChart)
 function loadCore() {
     let script = document.createElement("script");
     script.src = "https://cdn.amcharts.com/lib/5/index.js"
@@ -37,6 +38,16 @@ function loadWorld() {
     document.head.appendChild(script);
     script.onload = async function () {
         console.log("world loaded")
+        loadCountry()
+    }
+}
+
+function loadCountry() {
+    let script = document.createElement("script");
+    script.src = "https://cdn.amcharts.com/lib/5/geodata/data/countries2.js"
+    document.head.appendChild(script);
+    script.onload = async function () {
+        console.log("continent loaded")
         loadAnimate()
     }
 }
@@ -77,6 +88,16 @@ function initChart() {
         // Create root element
         // https://www.amcharts.com/docs/v5/getting-started/#Root_element
         var root = am5.Root.new("chart");
+        var colors = am5.ColorSet.new(root, {});
+        var continents = {
+            "AF": 0,
+            "AN": 1,
+            "AS": 2,
+            "EU": 3,
+            "NA": 4,
+            "OC": 5,
+            "SA": 6
+        }
 
         // Set themes
         // https://www.amcharts.com/docs/v5/concepts/themes/
@@ -89,8 +110,11 @@ function initChart() {
         var chart = root.container.children.push(am5map.MapChart.new(root, {
             panX: "rotateX",
             panY: "rotateY",
+            wheelX: "rotateX",
+            wheelY: "rotateY",
             projection: am5map.geoOrthographic(),
-            homeGeoPoint: { latitude: 31.1667, longitude: 121.4667 },
+            homeGeoPoint: { latitude: 0, longitude: 0 },
+            maxPanOut: 0
             // rotationX: -140,
             // rotationY: -20
         }));
@@ -153,9 +177,104 @@ function initChart() {
 
         // Create main polygon series for countries
         // https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
-        var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
-            geoJSON: am5geodata_worldLow
+        var worldSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+            geoJSON: am5geodata_worldLow,
+            // visible: false
         }));
+
+        worldSeries.mapPolygons.template.setAll({
+            tooltipText: "{name}",
+            interactive: true,
+            fill: am5.color(0xaaaaaa),
+            templateField: "polygonSettings"
+        });
+
+        worldSeries.mapPolygons.template.states.create("hover", {
+            fill: root.interfaceColors.get("primaryButtonActive")
+        });
+
+        worldSeries.mapPolygons.template.events.on("click", (ev) => {
+            var dataItem = ev.target.dataItem;
+            var data = dataItem.dataContext;
+            var zoomAnimation = selectCountry(dataItem.get("id"))
+
+            Promise.all([
+                // zoomAnimation[0].waitForStop(),
+                // zoomAnimation[1].waitForStop(),
+                am5.net.load("https://cdn.amcharts.com/lib/5/geodata/json/" + data.map + ".json", chart)
+            ]).then((results) => {
+                var geodata = am5.JSONParser.parse(results[0].response);
+                countrySeries.setAll({
+                    geoJSON: geodata,
+                    fill: data.polygonSettings.fill
+                });
+
+                countrySeries.show();
+                // worldSeries.hide(100);
+                homeButton.show();
+            });
+        });
+
+// Create polygon series for the country map
+// https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
+        var countrySeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+            visible: false
+        }));
+
+        countrySeries.mapPolygons.template.setAll({
+            tooltipText: "{name}",
+            interactive: true,
+            fill: am5.color(0xaaaaaa)
+        });
+
+        countrySeries.mapPolygons.template.states.create("hover", {
+            fill: colors.getIndex(9)
+        });
+
+
+
+// Set up data for countries
+        var data = [];
+        for(var id in am5geodata_data_countries2) {
+            if (am5geodata_data_countries2.hasOwnProperty(id)) {
+                var country = am5geodata_data_countries2[id];
+                if (country.maps.length) {
+                    data.push({
+                        id: id,
+                        map: country.maps[0],
+                        polygonSettings: {
+                            fill: colors.getIndex(continents[country.continent_code]),
+                        }
+                    });
+                }
+            }
+        }
+        worldSeries.data.setAll(data);
+
+
+
+        var homeButton = chart.children.push(am5.Button.new(root, {
+            paddingTop: 10,
+            paddingBottom: 10,
+            x: am5.percent(100),
+            centerX: am5.percent(100),
+            opacity: 0,
+            interactiveChildren: false,
+            icon: am5.Graphics.new(root, {
+                svgPath: "M16,8 L14,8 L14,16 L10,16 L10,10 L6,10 L6,16 L2,16 L2,8 L0,8 L8,0 L16,8 Z M16,8",
+                fill: am5.color(0xffffff)
+            })
+        }));
+
+        homeButton.events.on("click", function() {
+            // chart.goHome();
+            rotateToArea(121.4667, 31.1667)
+            worldSeries.show();
+            countrySeries.hide();
+            homeButton.hide();
+        });
+
+
 
         // Create line series for trajectory lines
         // https://www.amcharts.com/docs/v5/charts/map-chart/map-line-series/
@@ -284,27 +403,39 @@ function initChart() {
                 duration: 1500,
                 easing: am5.ease.inOut(am5.ease.cubic)
             });
-
-            // var dataItem = polygonSeries.getDataItemById(id);
-            // var target = area.dataItem.get("mapPolygon");
-            // if (target) {
-            //     var centroid = target.geoCentroid();
-            //     if (centroid) {
-            //         chart.animate({
-            //             key: "rotationX",
-            //             to: -centroid.longitude,
-            //             duration: 1500,
-            //             easing: am5.ease.inOut(am5.ease.cubic)
-            //         });
-            //         chart.animate({
-            //             key: "rotationY",
-            //             to: -centroid.latitude,
-            //             duration: 1500,
-            //             easing: am5.ease.inOut(am5.ease.cubic)
-            //         });
-            //     }
-            // }
         }
+
+        function selectCountry(id) {
+            var dataItem = worldSeries.getDataItemById(id);
+            var target = dataItem.get("mapPolygon");
+            if (target) {
+                var centroid = target.geoCentroid();
+                if (centroid) {
+                    return [
+                        chart.animate({ key: "rotationX", to: -centroid.longitude, duration: 1500, easing: am5.ease.inOut(am5.ease.cubic) }),
+                        chart.animate({ key: "rotationY", to: -centroid.latitude, duration: 1500, easing: am5.ease.inOut(am5.ease.cubic) })
+                    ]
+                }
+            }
+        }
+
+        function selectContinent(id) {
+            var dataItem = continentSeries.getDataItemById(id);
+            var target = dataItem.get("mapPolygon");
+            if (target) {
+                var centroid = target.geoCentroid();
+                if (centroid) {
+                    chart.animate({ key: "rotationX", to: -centroid.longitude, duration: 1500, easing: am5.ease.inOut(am5.ease.cubic) });
+                    chart.animate({ key: "rotationY", to: -centroid.latitude, duration: 1500, easing: am5.ease.inOut(am5.ease.cubic) });
+                }
+            }
+        }
+
+        // let Logo = document.querySelectorAll("[aria-labelledby$=-title]");
+        // Logo.forEach((ele)=>{
+        //     ele.style.visibility="hidden";
+        // })
+
 
         // Make stuff animate on load
         chart.appear(1000, 100);
@@ -314,7 +445,6 @@ function initChart() {
         // chart.goHome();
 
     }); // end am5.ready()
-
 
 
 }
