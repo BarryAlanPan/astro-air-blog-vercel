@@ -113,6 +113,8 @@ function initChart() {
             panY: "rotateY",
             wheelX: "rotateX",
             wheelY: "rotateY",
+            // x: 0,
+            // y: 0,
             projection: am5map.geoOrthographic(),
             homeGeoPoint: { latitude: 0, longitude: 0 },
             maxPanOut: 0
@@ -197,7 +199,8 @@ function initChart() {
         worldSeries.mapPolygons.template.events.on("click", (ev) => {
             var dataItem = ev.target.dataItem;
             var data = dataItem.dataContext;
-            var zoomAnimation = selectCountry(dataItem.get("id"))
+            selectCountry(dataItem.get("id"))
+            // worldSeries.zoomToDataItem(dataItem)
 
             Promise.all([
                 // zoomAnimation[0].waitForStop(),
@@ -270,6 +273,9 @@ function initChart() {
         homeButton.events.on("click", function() {
             // chart.goHome();
             rotateToArea(121.4667, 31.1667)
+            // chart.set("x", 0)
+            // chart.set("y", 0)
+            // chart.zoomOut()
             worldSeries.show();
             countrySeries.hide();
             homeButton.hide();
