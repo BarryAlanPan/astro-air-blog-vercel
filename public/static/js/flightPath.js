@@ -111,12 +111,12 @@ function initChart() {
         var chart = root.container.children.push(am5map.MapChart.new(root, {
             panX: "rotateX",
             panY: "rotateY",
-            wheelX: "rotateX",
-            wheelY: "rotateY",
+            // wheelX: "rotateX",
+            // wheelY: "rotateY",
             // x: 0,
             // y: 0,
             projection: am5map.geoOrthographic(),
-            homeGeoPoint: { latitude: 0, longitude: 0 },
+            // homeGeoPoint: { latitude: 0, longitude: 0 },
             maxPanOut: 0
             // rotationX: -140,
             // rotationY: -20
@@ -200,6 +200,7 @@ function initChart() {
             var dataItem = ev.target.dataItem;
             var data = dataItem.dataContext;
             selectCountry(dataItem.get("id"))
+            // console.log("https://cdn.amcharts.com/lib/5/geodata/json/" + data.map + ".json")
             // worldSeries.zoomToDataItem(dataItem)
 
             Promise.all([
@@ -214,6 +215,7 @@ function initChart() {
                 });
 
                 countrySeries.show();
+                stateSeries.hide()
                 // worldSeries.hide(100);
                 homeButton.show();
             });
@@ -235,6 +237,87 @@ function initChart() {
             fill: colors.getIndex(9)
         });
 
+        countrySeries.mapPolygons.template.events.on("click", (ev) => {
+            var dataItem = ev.target.dataItem;
+            var data = dataItem.dataContext;
+            var id = dataItem.get("id").toLowerCase().split("-");
+            selectRegion(dataItem.get("id"))
+            // console.log(id)
+            if (id[0] ==='ca' || id[0] ==='us' || id[0] ==='mx') {
+                var url = ''
+                if (id[0] ==='ca') {
+                    url = "https://cdn.amcharts.com/lib/5/geodata/json/region/canada/" + id[1] + "Low.json"
+                } else if (id[0] ==='us') {
+                    url = "https://cdn.amcharts.com/lib/5/geodata/json/region/usa/" + id[1] + "Low.json"
+                } else {
+                    url = "https://cdn.amcharts.com/lib/5/geodata/json/region/mexico/" + id[1] + "Low.json"
+                }
+
+                Promise.all([
+                    am5.net.load(url, chart)
+                ]).then(function(results) {
+                    var geodata = am5.JSONParser.parse(results[0].response);
+                    stateSeries.setAll({
+                        geoJSON: geodata
+                    });
+                    stateSeries.set("name", "{CDNAME}");
+                    stateSeries.show();
+                    // usaSeries.hide(100);
+                    homeButton.show();
+                    // title.set("text", name);
+                });
+            }
+        })
+
+        // Create polygon series for the country map
+// https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
+        var stateSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+            visible: false
+        }));
+
+        stateSeries.mapPolygons.template.setAll({
+            tooltipText: "{name}{COUNTY}{CDNAME}",
+            interactive: true,
+            fill: am5.color(0xaaaaaa)
+        });
+
+        // stateSeries.mapPolygons.template.adapters.add("tooltipText", function (value, target, key) {
+        //     console.log(target.dataItem.get("name"))
+        //     if (target.dataItem.dataContext.get("name")) {
+        //         return value
+        //     } else if (target.dataItem.get("CDNAME")) {
+        //         return target.dataItem.get("CDNAME")
+        //     } else {
+        //         return target.dataItem.get("COUNTY")
+        //     }
+        // })
+
+        stateSeries.mapPolygons.template.states.create("hover", {
+            fill: colors.getIndex(9)
+        });
+
+        // usaSeries.mapPolygons.template.events.on("click", (ev) => {
+        //     var dataItem = ev.target.dataItem;
+        //     var id = dataItem.get("id").toLowerCase().split("-").pop();
+        //     var name = dataItem.dataContext.name;
+        //     var zoomAnimation = usaSeries.zoomToDataItem(dataItem);
+        //
+        //     Promise.all([
+        //         zoomAnimation.waitForStop(),
+        //         am5.net.load("https://cdn.amcharts.com/lib/5/geodata/json/region/usa/congressional2022/" + id + "Low.json", chart)
+        //     ]).then(function(results) {
+        //         var geodata = am5.JSONParser.parse(results[1].response);
+        //         stateSeries.setAll({
+        //             geoJSON: geodata
+        //         });
+        //
+        //         stateSeries.show();
+        //         usaSeries.hide(100);
+        //         backContainer.show();
+        //         title.set("text", name);
+        //     });
+        // });
+
 
 
 // Set up data for countries
@@ -246,6 +329,7 @@ function initChart() {
                     data.push({
                         id: id,
                         map: country.maps[0],
+                        // map: country.maps[country.maps.length-1],
                         polygonSettings: {
                             fill: colors.getIndex(continents[country.continent_code]),
                         }
@@ -271,13 +355,14 @@ function initChart() {
         }));
 
         homeButton.events.on("click", function() {
-            // chart.goHome();
+            chart.goHome();
             rotateToArea(121.4667, 31.1667)
             // chart.set("x", 0)
             // chart.set("y", 0)
             // chart.zoomOut()
             worldSeries.show();
             countrySeries.hide();
+            stateSeries.hide();
             homeButton.hide();
         });
 
@@ -414,6 +499,20 @@ function initChart() {
 
         function selectCountry(id) {
             var dataItem = worldSeries.getDataItemById(id);
+            var target = dataItem.get("mapPolygon");
+            if (target) {
+                var centroid = target.geoCentroid();
+                if (centroid) {
+                    return [
+                        chart.animate({ key: "rotationX", to: -centroid.longitude, duration: 1500, easing: am5.ease.inOut(am5.ease.cubic) }),
+                        chart.animate({ key: "rotationY", to: -centroid.latitude, duration: 1500, easing: am5.ease.inOut(am5.ease.cubic) })
+                    ]
+                }
+            }
+        }
+
+        function selectRegion(id) {
+            var dataItem = countrySeries.getDataItemById(id);
             var target = dataItem.get("mapPolygon");
             if (target) {
                 var centroid = target.geoCentroid();
