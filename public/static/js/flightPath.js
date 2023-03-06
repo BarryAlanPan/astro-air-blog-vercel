@@ -132,6 +132,7 @@ function initChart() {
         });
 
         worldSeries.mapPolygons.template.events.on("click", (ev) => {
+            chart.goHome()
             var dataItem = ev.target.dataItem;
             var data = dataItem.dataContext;
             selectCountry(dataItem.get("id"))
@@ -152,7 +153,7 @@ function initChart() {
                 countrySeries.show();
                 stateSeries.hide()
                 // worldSeries.hide(100);
-                // homeButton.show();
+                homeButton.show();
             });
         });
 
@@ -198,7 +199,7 @@ function initChart() {
                     stateSeries.set("name", "{CDNAME}");
                     stateSeries.show();
                     // usaSeries.hide(100);
-                    // homeButton.show();
+                    homeButton.show();
                     // title.set("text", name);
                 });
             }
@@ -276,32 +277,20 @@ function initChart() {
 
 
 
-        // var homeButton = chart.children.push(am5.Button.new(root, {
-        //     paddingTop: 10,
-        //     paddingBottom: 10,
-        //     x: am5.percent(100),
-        //     centerX: am5.percent(100),
-        //     opacity: 0,
-        //     interactiveChildren: false,
-        //     icon: am5.Graphics.new(root, {
-        //         svgPath: "M16,8 L14,8 L14,16 L10,16 L10,10 L6,10 L6,16 L2,16 L2,8 L0,8 L8,0 L16,8 Z M16,8",
-        //         fill: am5.color(0xffffff)
-        //     })
-        // }));
-        //
-        // homeButton.events.on("click", function() {
-        //     chart.goHome();
-        //     rotateToArea(121.4667, 31.1667)
-        //     // chart.set("x", 0)
-        //     // chart.set("y", 0)
-        //     // chart.zoomOut()
-        //     worldSeries.show();
-        //     countrySeries.hide();
-        //     stateSeries.hide();
-        //     homeButton.hide();
-        // });
+        var homeButton = chart.children.push(am5.Button.new(root, {
+            paddingTop: 10,
+            paddingBottom: 10,
+            x: am5.percent(100),
+            centerX: am5.percent(100),
+            opacity: 0,
+            interactiveChildren: false,
+            icon: am5.Graphics.new(root, {
+                svgPath: "M16,8 L14,8 L14,16 L10,16 L10,10 L6,10 L6,16 L2,16 L2,8 L0,8 L8,0 L16,8 Z M16,8",
+                fill: am5.color(0xffffff)
+            })
+        }));
 
-        chart.chartContainer.get("background").events.on("click", function () {
+        homeButton.events.on("click", function() {
             chart.goHome();
             rotateToArea(121.4667, 31.1667)
             // chart.set("x", 0)
@@ -310,7 +299,19 @@ function initChart() {
             worldSeries.show();
             countrySeries.hide();
             stateSeries.hide();
-        })
+            homeButton.hide();
+        });
+
+        // chart.chartContainer.get("background").events.on("click", function () {
+        //     chart.goHome();
+        //     rotateToArea(121.4667, 31.1667)
+        //     // chart.set("x", 0)
+        //     // chart.set("y", 0)
+        //     // chart.zoomOut()
+        //     worldSeries.show();
+        //     countrySeries.hide();
+        //     stateSeries.hide();
+        // })
 
 
 
