@@ -374,6 +374,7 @@ function initChart() {
         var Cambodia = addCity({ latitude: 13.3622, longitude: 103.8597 }, "Cambodia")
         var Hongkong = addCity({ latitude: 22.3069, longitude: 114.1831 }, "Hongkong")
         var Malaysia = addCity({ latitude: 3.1478, longitude: 101.6953 }, "Malaysia")
+        // var Tampere = addCity({ latitude: 61.4981, longitude: 23.76 }, "Tampere")
 
         var lineDataItem = lineSeries.pushDataItem({
             // pointsToConnect: [paris, toronto, la, havana]
